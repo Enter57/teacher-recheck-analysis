@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="数学机器判分与教师网阅改判：场景、根因与产品价值分析">
+  <title>数学机器判分与教师改判场景分析</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f36ee'/%3E%3Cpath d='M8 10h16M8 16h9M8 22h13' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='23' cy='16' r='3' fill='%23008f7e'/%3E%3C/svg%3E">
+  <style>
+    :root{
+      --bg:#f6f8fb;--card:#fff;--ink:#172033;--muted:#748094;--line:#dbe5f0;
+      --blue:#4b35ed;--blue2:#6552f3;--blue-soft:#eef0ff;--teal:#008f7e;
+      --teal-soft:#e8f7f4;--orange:#e87508;--orange-soft:#fff5e8;--red:#df3654;
+      --red-soft:#fff0f3;--grid:#e9eef5;--radius:14px
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;font-size:16px;line-height:1.58}
+    a{color:inherit}
+    .wrap{width:min(1184px,calc(100% - 40px));margin:0 auto;padding:34px 0 44px}
+    .eyebrow{font-size:12px;font-weight:900;letter-spacing:.17em;color:var(--blue);text-transform:uppercase;margin-bottom:12px}
+    h1,h2,h3,p{margin-top:0}h1{font-size:36px;line-height:1.22;letter-spacing:-.035em;margin-bottom:10px}h2{font-size:22px;line-height:1.35;margin-bottom:6px}h3{font-size:17px;line-height:1.4;margin-bottom:6px}
+    .lead{max-width:930px;color:var(--muted);margin:0;font-size:15px}
+    .grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(4,1fr);margin-top:26px}.cols{grid-template-columns:1fr 1fr;margin-top:16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:none;position:relative;overflow:hidden}
+    .kpi{min-height:134px;padding:20px 22px}.kpi::after{content:"";position:absolute;width:116px;height:116px;border-radius:50%;right:-22px;bottom:-46px;background:#f0f4ff}.kpi:nth-child(2)::after{background:#eef9f7}.kpi:nth-child(3)::after{background:#fff6eb}.kpi:nth-child(4)::after{background:#fff0f3}.kpi .label{font-size:14px;color:var(--muted);position:relative;z-index:1}.kpi .value{font-size:30px;line-height:1;font-weight:900;letter-spacing:-.03em;margin:16px 0 10px;position:relative;z-index:1;font-variant-numeric:tabular-nums}.kpi .sub{font-size:12px;color:var(--muted);position:relative;z-index:1}
+    .section-card{margin-top:16px}.section-head{display:flex;align-items:start;justify-content:space-between;gap:18px;margin-bottom:20px}.section-head p{font-size:13px;color:var(--muted);margin:0;max-width:720px}.tag{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid #d9d7ff;border-radius:999px;color:var(--blue);background:#fafaff;font-size:12px;white-space:nowrap;font-weight:700}
+    .chart{position:relative;min-height:220px}.chart-grid{background:repeating-linear-gradient(to bottom,transparent 0,transparent 44px,var(--grid) 45px,var(--grid) 46px);padding:10px 0 8px}.bar-group{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:155px 1fr 70px 82px;gap:12px;align-items:center;min-height:34px}.bar-label{font-size:13px;color:#3b4555}.bar-track{height:17px;border-radius:5px;background:#edf1f6;position:relative;overflow:visible}.bar{display:block;height:100%;border-radius:5px;background:var(--blue);position:relative;min-width:3px;transition:filter .16s ease,transform .16s ease;transform-origin:left}.bar.teal{background:var(--teal)}.bar.orange{background:var(--orange)}.bar.red{background:var(--red)}.bar:hover{filter:brightness(1.05);transform:scaleY(1.14)}.bar[data-tip]::after{content:attr(data-tip);position:absolute;left:min(100%,calc(100% - 30px));bottom:calc(100% + 8px);z-index:5;opacity:0;pointer-events:none;white-space:nowrap;padding:6px 8px;border-radius:6px;background:#172033;color:#fff;font-size:11px;transform:translateY(3px);transition:.16s}.bar:hover::after{opacity:1;transform:none}.bar-value{text-align:right;font-size:12px;font-weight:900;color:var(--blue);font-variant-numeric:tabular-nums}.bar-row:nth-child(even) .bar-value{color:var(--teal)}
+    .legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:16px;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:0}.dot.blue{background:var(--blue)}.dot.teal{background:var(--teal)}.dot.orange{background:var(--orange)}.dot.red{background:var(--red)}
+    .summary{margin-top:16px;color:#536074;font-size:13px}.summary strong{color:var(--ink)}
+    .funnel{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}.funnel-step{padding:18px;border-radius:10px;background:#f7f9fc;border:1px solid #e5ebf2;position:relative}.funnel-step:not(:last-child)::after{content:"";position:absolute;right:-13px;top:50%;width:13px;height:2px;background:#cbd5e2}.funnel-step.final{background:var(--teal-soft);border-color:#b6e1d9}.funnel-step .n{font-size:27px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.funnel-step strong{display:block;font-size:13px;margin-top:8px}.funnel-step span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+    .mini-table{width:100%;border-collapse:collapse;margin-top:18px}.mini-table th,.mini-table td{padding:10px 9px;border-top:1px solid #edf1f5;text-align:left;font-size:12px}.mini-table th{background:#fafbfc;color:var(--muted);font-weight:700}.mini-table td.num{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.mini-table tbody tr:hover{background:#fafbff}
+    .donut-layout{display:grid;grid-template-columns:230px 1fr;gap:22px;align-items:center}.donut{width:190px;aspect-ratio:1;border-radius:50%;margin:auto;position:relative;background:conic-gradient(var(--teal) 0 67.2%,var(--red) 67.2% 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)}.donut::after{content:"";position:absolute;inset:34px;border-radius:50%;background:#fff}.donut-center{position:absolute;inset:0;z-index:2;display:grid;place-content:center;text-align:center}.donut-center b{font-size:26px;line-height:1}.donut-center span{font-size:11px;color:var(--muted);margin-top:5px}.donut-stats{display:grid;gap:11px}.donut-stat{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;padding:10px 12px;background:#f8fafc;border-radius:9px}.donut-stat strong{font-size:13px}.donut-stat b{font-size:15px;font-variant-numeric:tabular-nums}.donut-stat small{grid-column:2/-1;color:var(--muted);font-size:11px}.magnitude{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.magnitude div{padding:12px;background:#f7f9fc;border-radius:9px;text-align:center}.magnitude b{display:block;font-size:19px}.magnitude span{font-size:11px;color:var(--muted)}
+    .cause-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:24px}.cause-bars{display:grid;gap:11px}.cause-row{display:grid;grid-template-columns:180px 1fr 70px;gap:12px;align-items:center}.cause-row label{font-size:13px}.cause-row .track{height:23px;background:#eef2f6;border-radius:5px}.cause-row .bar{height:23px}.cause-row b{text-align:right;font-size:12px}.big-insight{background:var(--blue-soft);border:1px solid #d9ddff;border-radius:12px;padding:23px}.big-insight .big{font-size:48px;line-height:1;font-weight:900;color:var(--blue);letter-spacing:-.05em}.big-insight h3{margin:12px 0 8px}.big-insight p{font-size:13px;color:#5d6880;margin:0}
+    .table-wrap{overflow-x:auto;margin-top:18px;border-top:1px solid #edf1f5}table.data{border-collapse:collapse;width:100%;min-width:760px}table.data th,table.data td{padding:11px 10px;border-bottom:1px solid #edf1f5;text-align:left;font-size:12px}table.data th{color:var(--muted);background:#fafbfc;font-weight:700}table.data tbody tr:hover{background:#f8f8ff}.right{text-align:right!important;font-variant-numeric:tabular-nums}.rate{font-weight:900;color:var(--blue)}.up{color:var(--teal);font-weight:800}.down{color:var(--red);font-weight:800}.both{color:#7759bf;font-weight:800}
+    .callout{margin-top:18px;border-left:4px solid var(--orange);background:#fffbea;color:#73560a;padding:12px 14px;border-radius:7px;font-size:13px}.method{margin-top:18px;border:1px solid #d7e4f3;background:#edf5ff;border-radius:10px;padding:15px 17px;color:#40536a;font-size:13px}.method strong{color:var(--ink)}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.filter{min-height:36px;padding:0 14px;border:1px solid #d8e0ec;border-radius:999px;background:#fff;color:#5e6b7d;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.filter:hover{border-color:#b6b0ff;color:var(--blue)}.filter[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}.filter:focus-visible,a:focus-visible{outline:3px solid #ffb74d;outline-offset:2px}
+    .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.case{border:1px solid #e1e7ef;border-radius:11px;padding:16px;background:#fff;transition:transform .16s ease,border-color .16s ease}.case:hover{transform:translateY(-2px);border-color:#bcb6ff}.case.hidden{display:none}.case-type{font-size:11px;color:var(--blue);font-weight:900;letter-spacing:.05em}.case h3{font-size:15px;margin:6px 0}.case p{font-size:12px;color:var(--muted);margin-bottom:12px}.score{display:inline-flex;padding:5px 8px;border-radius:6px;background:var(--red-soft);color:var(--red);font-weight:900;font-size:13px}.case[data-direction="up"] .score{background:var(--teal-soft);color:var(--teal)}.case[data-direction="both"] .score{background:var(--blue-soft);color:var(--blue)}.case-id{margin-top:12px;padding-top:10px;border-top:1px dashed #dde4ec;color:#8791a0;font:10px/1.5 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}.confidence{float:right;font-family:inherit;font-weight:900}.confidence.high{color:var(--teal)}.confidence.mid{color:var(--orange)}.confidence.low{color:var(--red)}
+    .case-trigger{min-height:32px;border:1px solid #cbc8ff;border-radius:7px;background:#f5f4ff;color:var(--blue);font:800 12px/1 "Segoe UI","Microsoft YaHei",sans-serif;padding:0 10px;cursor:pointer;white-space:nowrap}.case-trigger:hover{background:var(--blue);border-color:var(--blue);color:#fff}.case-trigger:focus-visible,.dialog-close:focus-visible{outline:3px solid #ffb74d;outline-offset:2px}.case .case-trigger{margin-top:12px;width:100%;min-height:38px}
+    dialog.case-dialog{width:min(920px,calc(100% - 32px));max-height:min(90vh,960px);padding:0;border:0;border-radius:16px;color:var(--ink);background:#fff;box-shadow:0 24px 80px rgba(24,32,51,.24);overflow:hidden}dialog.case-dialog::backdrop{background:rgba(23,32,51,.48);backdrop-filter:blur(2px)}.dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:21px 24px 17px;border-bottom:1px solid var(--line)}.dialog-head h2{margin:0;font-size:20px}.dialog-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.dialog-close{display:grid;place-items:center;flex:0 0 36px;height:36px;border:1px solid #d7dfeb;border-radius:9px;background:#fff;color:#566276;font-size:22px;line-height:1;cursor:pointer}.dialog-close:hover{background:#f2f4f8;color:var(--ink)}.dialog-body{max-height:calc(90vh - 82px);overflow:auto;padding:20px 24px 24px;background:#f8fafc}.modal-case{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}.modal-case+.modal-case{margin-top:14px}.modal-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.modal-chip{display:inline-flex;align-items:center;min-height:27px;padding:3px 8px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:11px;font-weight:900}.modal-chip.up{background:var(--teal-soft);color:var(--teal)}.modal-chip.down{background:var(--red-soft);color:var(--red)}.case-evidence{margin:0;border:1px solid #dfe6ef;border-radius:10px;background:#eef2f6;overflow:hidden;text-align:center}.case-evidence-image{display:block;width:auto;max-width:100%;height:auto;max-height:560px;margin:0 auto;object-fit:contain;background:#fff}.case-evidence figcaption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;background:#f7f9fc;color:var(--muted);font-size:11px;text-align:left}.case-evidence a{color:var(--blue);font-weight:900;white-space:nowrap;text-decoration:none}.case-evidence a:hover{text-decoration:underline}.image-error{display:none;padding:34px 16px;color:var(--red);font-size:13px}.case-evidence.load-error .case-evidence-image{display:none}.case-evidence.load-error .image-error{display:block}.modal-note{margin:13px 0 0;padding:11px 13px;border-left:3px solid var(--orange);background:#fff9ee;color:#6b5526;font-size:12px}.modal-ids{margin:12px 0 0;color:#8490a1;font:10px/1.55 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+    .pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px}.step{position:relative;border:1px solid #e0e7ef;background:#fafbfd;border-radius:10px;padding:16px 13px;min-height:142px}.step.focus{background:var(--blue-soft);border-color:#cbc8ff}.step:not(:last-child)::after{content:"";position:absolute;right:-9px;top:50%;width:9px;height:2px;background:#cbd5e2}.step .step-no{font-size:10px;font-weight:900;color:var(--blue)}.step h3{font-size:14px;margin:10px 0 6px}.step p{font-size:11px;color:var(--muted);margin:0}.priority-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:20px}.priority-list{display:grid;gap:8px}.priority-item{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding:12px 14px;background:#f8fafc;border-radius:9px}.priority-item .level{font-size:14px;font-weight:900;color:var(--blue)}.priority-item strong{font-size:13px;display:block}.priority-item span{font-size:11px;color:var(--muted)}.priority-item .why{color:var(--orange);font-weight:900;text-align:right}.decision{border:1px solid #d9ddff;background:#f3f4ff;border-radius:11px;padding:20px}.decision ol{padding-left:1.25em;margin:10px 0 0}.decision li{font-size:12px;padding:5px 0}.decision .last{border-top:1px solid #d9ddff;padding-top:12px;margin:14px 0 0;color:var(--blue);font-weight:900;font-size:13px}
+    .source-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.source-links a{min-height:40px;display:inline-flex;align-items:center;padding:7px 12px;border:1px solid #d7dfeb;border-radius:8px;background:#fff;color:var(--blue);font-size:12px;font-weight:800;text-decoration:none}.source-links a:hover{background:#f3f4ff}.footer{margin-top:28px;padding-top:18px;border-top:1px solid #e5ebf2;color:#98a2b1;font-size:11px}
+    @media(max-width:960px){.kpis{grid-template-columns:repeat(2,1fr)}.cols,.cause-layout,.priority-grid{grid-template-columns:1fr}.case-grid{grid-template-columns:repeat(2,1fr)}.pipeline{grid-template-columns:repeat(3,1fr)}.step::after{display:none}}
+    @media(max-width:640px){.wrap{width:min(100% - 24px,1184px);padding-top:24px}h1{font-size:29px}.kpis,.cols,.case-grid,.pipeline,.funnel{grid-template-columns:1fr}.funnel-step::after{display:none}.donut-layout{grid-template-columns:1fr}.bar-row{grid-template-columns:110px 1fr 54px}.bar-row .case-trigger{grid-column:2/4;justify-self:start}.cause-row{grid-template-columns:135px 1fr 54px}.magnitude{grid-template-columns:1fr}.priority-item{grid-template-columns:44px 1fr}.priority-item .why{grid-column:2;text-align:left}.section-head{display:block}.tag{margin-top:8px}.dialog-head,.dialog-body{padding-left:16px;padding-right:16px}.case-evidence figcaption{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar,.case{transition:none}}
+    @media print{@page{size:A4;margin:12mm}body{background:#fff}.wrap{width:100%;padding:0}.card{break-inside:avoid}.filters,.source-links,.case-trigger,.case-dialog{display:none}.case.hidden{display:block!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">TEACHER RECHECK SIGNAL · MATHEMATICS</div>
+      <h1>数学机器判分与教师改判场景分析</h1>
+      <p class="lead">只分析数学“机批+网阅并存”的紫行，并剔除切图中明确标注“手批”的题组。先看真实改分规模，再下钻评分规则与产品切入场景；当前阶段不输出教师个人画像。</p>
+    </header>
+
+    <section class="grid kpis" aria-label="核心指标">
+      <article class="card kpi"><div class="label">数学机器判分记录</div><div class="value">184,540</div><div class="sub">264 份作业 · 8,644 份学生答卷</div></article>
+      <article class="card kpi"><div class="label">剔除手批后真实改分率</div><div class="value">5.19%</div><div class="sub">以全部机器判分记录为分母</div></article>
+      <article class="card kpi"><div class="label">发生改分的作业覆盖率</div><div class="value">51.9%</div><div class="sub">137 / 264 份数学作业</div></article>
+      <article class="card kpi"><div class="label">发生改分的学生答卷覆盖率</div><div class="value">54.5%</div><div class="sub">4,709 / 8,644 份学生答卷</div></article>
+    </section>
+
+    <section class="grid cols">
+      <article class="card">
+        <div class="section-head"><div><h2>1. 数据口径与样本清洗</h2><p>紫行是候选状态，不等于教师一定改分；必须排除手批扫描场景。</p></div><span class="tag">清洗漏斗</span></div>
+        <div class="funnel">
+          <div class="funnel-step"><div class="n">12,163</div><strong>紫行候选</strong><span>机批与网阅并存</span></div>
+          <div class="funnel-step"><div class="n">11,412</div><strong>剔除手批后</strong><span>排除 41 个手批题组</span></div>
+          <div class="funnel-step final"><div class="n">9,584</div><strong>实际改分</strong><span>机器分 ≠ 教师分</span></div>
+        </div>
+        <table class="mini-table"><thead><tr><th>排除或保留项</th><th class="right">记录数</th></tr></thead><tbody><tr><td>手批题组中的紫行</td><td class="num">751</td></tr><tr><td>其中存在分差、但不属于机器后改分</td><td class="num">472</td></tr><tr><td>紫行但机器分与教师分一致</td><td class="num">1,828</td></tr></tbody></table>
+        <div class="callout">产品指标应使用“剔除手批后的真实分差率”，不能直接把紫行数量当作教师改分数量。</div>
+      </article>
+
+      <article class="card">
+        <div class="section-head"><div><h2>2. 教师改分方向与幅度</h2><p>加分反映有效证据漏判；减分反映过程错误或机器只命中局部答案。</p></div><span class="tag">环形图</span></div>
+        <div class="donut-layout">
+          <div class="donut" role="img" aria-label="教师加分67.2%，教师减分32.8%"><div class="donut-center"><b>9,584</b><span>实际改分</span></div></div>
+          <div class="donut-stats">
+            <div class="donut-stat"><i class="dot teal"></i><strong>教师加分</strong><b>6,438</b><small>占 67.2% · 过程分漏给、整题漏判、识别未命中</small></div>
+            <div class="donut-stat"><i class="dot red"></i><strong>教师减分</strong><b>3,146</b><small>占 32.8% · 过程错误、理由不严谨、漏答小问</small></div>
+          </div>
+        </div>
+        <div class="magnitude"><div><b>25%</b><span>归一化改分幅度中位数</span></div><div><b>50%</b><span>P75 改分幅度</span></div><div><b>100%</b><span>P90 改分幅度</span></div></div>
+        <p class="summary"><strong>高风险翻转：</strong>机器 0 分后教师给分占 28.9%；机器满分后教师减分占 11.9%；0 分与满分之间的极端翻转占 12.4%。</p>
+      </article>
+    </section>
+
+    <section class="card section-card">
+      <div class="section-head"><div><h2>3. 根因构成：评分语义是主要矛盾</h2><p>候选根因来自题干、学生作答、机器分、教师分、OCR 与同题组高分答案的综合判断。</p></div><span class="tag">构成条形图</span></div>
+      <div class="cause-layout">
+        <div class="cause-bars">
+          <div class="cause-row"><label>过程分 / 步骤分</label><div class="track"><span class="bar" style="width:100%" data-tip="4,290 条"></span></div><b>44.8%</b></div>
+          <div class="cause-row"><label>语义与过程有效性</label><div class="track"><span class="bar teal" style="width:54.4%" data-tip="2,336 条"></span></div><b>24.4%</b></div>
+          <div class="cause-row"><label>OCR / 等价表达</label><div class="track"><span class="bar orange" style="width:46.4%" data-tip="1,993 条"></span></div><b>20.8%</b></div>
+          <div class="cause-row"><label>作图 / 图形 / 答题区域</label><div class="track"><span class="bar red" style="width:16.5%" data-tip="708 条"></span></div><b>7.4%</b></div>
+          <div class="cause-row"><label>客观题选项 / 涂改</label><div class="track"><span class="bar" style="width:6%;background:#8b73d8" data-tip="257 条"></span></div><b>2.7%</b></div>
+        </div>
+        <aside class="big-insight"><div class="big">69.1%</div><h3>指向评分细则与过程理解</h3><p>过程分、步骤分以及过程有效性合计 6,626 条。产品价值不能只讲“把 OCR 做准”，还要把教师对得分点、理由、条件和完整性的判断转成规则。</p></aside>
+      </div>
+      <div class="legend"><span><i class="dot blue"></i>过程得分点</span><span><i class="dot teal"></i>推理有效性</span><span><i class="dot orange"></i>识别与等价表达</span><span><i class="dot red"></i>图形与区域</span></div>
+    </section>
+
+    <section class="card section-card">
+      <div class="section-head"><div><h2>4. 高频场景集中度：前 7 类覆盖 73.7%</h2><p>横向条形按实际改分条目排序；悬停查看规模，点击“案例”核对真实题目与改分记录。</p></div><span class="tag">横向条形图</span></div>
+      <div class="chart chart-grid bar-group" aria-label="高频场景占比">
+        <div class="bar-row"><div class="bar-label">最终错误，有有效步骤</div><div class="bar-track"><span class="bar" style="width:100%" data-tip="2,848 条 · 29.7%"></span></div><div class="bar-value">29.7%</div><button class="case-trigger" type="button" data-case-group="scene-process-credit" data-case-title="最终答案错误，但存在有效步骤">案例</button></div>
+        <div class="bar-row"><div class="bar-label">方法或步骤有瑕疵</div><div class="bar-track"><span class="bar teal" style="width:37%" data-tip="1,050 条 · 11.0%"></span></div><div class="bar-value">11.0%</div><button class="case-trigger" type="button" data-case-group="scene-method-flaw" data-case-title="方法或步骤有瑕疵">案例</button></div>
+        <div class="bar-row"><div class="bar-label">证明理由或推理严谨性</div><div class="bar-track"><span class="bar orange" style="width:34.4%" data-tip="980 条 · 10.2%"></span></div><div class="bar-value">10.2%</div><button class="case-trigger" type="button" data-case-group="scene-proof" data-case-title="证明理由或推理严谨性">案例</button></div>
+        <div class="bar-row"><div class="bar-label">有效步骤或结论被低估</div><div class="bar-track"><span class="bar teal" style="width:24.1%" data-tip="686 条 · 7.2%"></span></div><div class="bar-value">7.2%</div><button class="case-trigger" type="button" data-case-group="scene-underestimated" data-case-title="有效步骤或正确结论被低估">案例</button></div>
+        <div class="bar-row"><div class="bar-label">过程错误，仅命中局部结果</div><div class="bar-track"><span class="bar red" style="width:20%" data-tip="569 条 · 5.9%"></span></div><div class="bar-value">5.9%</div><button class="case-trigger" type="button" data-case-group="scene-local-result" data-case-title="过程错误，仅命中局部结果">案例</button></div>
+        <div class="bar-row"><div class="bar-label">评分边界或答案规范</div><div class="bar-track"><span class="bar orange" style="width:16.6%" data-tip="474 条 · 4.9%"></span></div><div class="bar-value">4.9%</div><button class="case-trigger" type="button" data-case-group="scene-boundary" data-case-title="评分边界或答案规范">案例</button></div>
+        <div class="bar-row"><div class="bar-label">漏答小问或作答不完整</div><div class="bar-track"><span class="bar red" style="width:16.1%" data-tip="460 条 · 4.8%"></span></div><div class="bar-value">4.8%</div><button class="case-trigger" type="button" data-case-group="scene-incomplete" data-case-title="漏答小问或作答不完整">案例</button></div>
+      </div>
+      <div class="table-wrap"><table class="data"><thead><tr><th>优先级</th><th>场景</th><th>教师动作</th><th class="right">条目数</th><th class="right">占比</th></tr></thead><tbody><tr><td class="rate">01</td><td>最终答案错误，但存在有效步骤</td><td class="up">补给过程分</td><td class="right">2,848</td><td class="right rate">29.7%</td></tr><tr><td class="rate">02</td><td>方法或步骤有瑕疵</td><td class="down">按细则减分</td><td class="right">1,050</td><td class="right rate">11.0%</td></tr><tr><td class="rate">03</td><td>证明理由、推理链或表达严谨性不一致</td><td class="both">双向调整</td><td class="right">980</td><td class="right rate">10.2%</td></tr><tr><td class="rate">04–07</td><td>有效步骤低估、局部结果误命中、评分边界、漏答小问</td><td class="both">双向调整</td><td class="right">2,189</td><td class="right rate">22.8%</td></tr></tbody></table></div>
+      <div class="callout">前三类已经覆盖 50.9%，前七类覆盖 73.7%。这支持从少数高频评分规则切入，而不是一开始追求所有题型全覆盖。</div>
+    </section>
+
+    <section class="card section-card" id="cases">
+      <div class="section-head"><div><h2>5. 评分规则单元与可抽查案例</h2><p>筛选加分或减分方向，查看机器判断与教师动作对应的最小评分规则。</p></div><span class="tag">案例筛选</span></div>
+      <div class="filters" role="group" aria-label="案例方向筛选"><button class="filter" type="button" data-filter="all" aria-pressed="true">全部案例</button><button class="filter" type="button" data-filter="down" aria-pressed="false">教师减分</button><button class="filter" type="button" data-filter="up" aria-pressed="false">教师加分</button></div>
+      <div class="case-grid">
+        <article class="case" data-direction="down"><div class="case-type">结果正确 ≠ 过程正确</div><h3>结论命中，但比例计算或理由错误</h3><p>学生写出“不相似”，但内外矩形尺寸和比例计算错误。机器可能只命中结论。</p><span class="score">8 → 1 分</span><div class="case-id">data_id 1500000100285349273<br>paper 9f06e22c-8ceb-4a14-b29a-2ad959038b5f <span class="confidence high">高置信</span></div><button class="case-trigger" type="button" data-case-group="rule-result-process" data-case-title="评分规则：结果正确不等于过程正确">查看题目与答案</button></article>
+        <article class="case" data-direction="down"><div class="case-type">多小问完成度</div><h3>只完成部分任务，不能按整题给分</h3><p>函数题包含参数、单调性与值域、恒成立范围；作答证据仅覆盖部分任务。</p><span class="score">6 → 2 分</span><div class="case-id">data_id 1500000100417094703<br>paper 96f32b12-3749-4b07-845a-11ccc29acc62 <span class="confidence mid">中置信</span></div><button class="case-trigger" type="button" data-case-group="rule-subparts" data-case-title="评分规则：多小问完成度">查看题目与答案</button></article>
+        <article class="case" data-direction="down"><div class="case-type">证明必要条件</div><h3>有判别式结论，但推理链不完整</h3><p>需代入已知条件并完整推出判别式结论；只写局部结果不足以获得满分。</p><span class="score">4 → 1 分</span><div class="case-id">data_id 1500000100301285044<br>paper f4a87b43-b728-4aef-b4d6-991641571dc0 <span class="confidence high">高置信推测</span></div><button class="case-trigger" type="button" data-case-group="rule-proof" data-case-title="评分规则：证明必要条件">查看题目与答案</button></article>
+        <article class="case" data-direction="up"><div class="case-type">过程得分点</div><h3>最终结果错误，仍可获得步骤分</h3><p>设元、列式、关键变形和中间结论都可能是独立得分点，不能因最后算错整题归零。</p><span class="score">逐点补分</span><div class="case-id">规则：证据匹配得分点后累加 <span class="confidence high">高频稳定场景</span></div><button class="case-trigger" type="button" data-case-group="rule-process-points" data-case-title="评分规则：过程得分点">查看题目与答案</button></article>
+        <article class="case" data-direction="both"><div class="case-type">最终答句完整性 · 人工核验</div><h3>过程已含结论，与完全缺少答句应区分</h3><p>15→16：两个答案已在计算中出现，仅“答”句漏写一个，教师补满；5→4：没有写“答：”，教师按最终作答不完整扣1分。</p><span class="score">15→16 / 5→4 分</span><div class="case-id">2 条人工核验案例 <span class="confidence high">已复核</span></div><button class="case-trigger" type="button" data-case-group="rule-final-answer-completeness" data-case-title="评分规则：最终答句完整性">查看两条切图</button></article>
+        <article class="case" data-direction="both"><div class="case-type">范围表达与严格条件 · 人工核验</div><h3>等价表达应放行，数学条件错误必须扣分</h3><p>3.5→4：m&gt;1/2结论正确，机器疑因涂改或答案格式少给0.5；3.5→2：判别式必须严格大于0，学生条件写错，教师扣分。</p><span class="score">3.5→4 / 3.5→2 分</span><div class="case-id">2 条人工核验案例 <span class="confidence high">1条推测原因</span></div><button class="case-trigger" type="button" data-case-group="rule-range-strictness" data-case-title="评分规则：范围表达与严格条件">查看两条切图</button></article>
+      </div>
+    </section>
+
+    <section class="card section-card">
+      <div class="section-head"><div><h2>6. 产品化路径：从答案匹配到规则执行</h2><p>场景库不是分析终点，而是评分能力、标注协议和验收样本的数据生产线。</p></div><span class="tag">能力链路</span></div>
+      <div class="pipeline"><article class="step"><div class="step-no">STEP 01</div><h3>任务拆解</h3><p>识别小问、证明目标、作图要求和答案区域。</p></article><article class="step focus"><div class="step-no">STEP 02</div><h3>评分点生成</h3><p>形成结论分、方法分、步骤分和规范分。</p></article><article class="step"><div class="step-no">STEP 03</div><h3>证据识别</h3><p>读取公式、符号、图形、竖式与多区域手写。</p></article><article class="step focus"><div class="step-no">STEP 04</div><h3>推理有效性</h3><p>检查条件是否使用、步骤是否合法、理由是否充分。</p></article><article class="step focus"><div class="step-no">STEP 05</div><h3>逐点评分</h3><p>证据映射评分点，支持部分分与扣分。</p></article><article class="step"><div class="step-no">STEP 06</div><h3>总分聚合</h3><p>处理漏答、多小问、互斥路径和分数上限。</p></article></div>
+      <div class="priority-grid"><div class="priority-list"><div class="priority-item"><div class="level">P0</div><div><strong>过程得分点识别</strong><span>设元、列式、关键变形、中间结论</span></div><span class="why">最大加分来源</span></div><div class="priority-item"><div class="level">P0</div><div><strong>结果—过程一致性校验</strong><span>避免“结论碰对”被直接给高分</span></div><span class="why">高风险减分</span></div><div class="priority-item"><div class="level">P1</div><div><strong>证明与多小问评分</strong><span>必要条件、推理链、漏答与总分上限</span></div><span class="why">独立建模</span></div><div class="priority-item"><div class="level">P1</div><div><strong>数学 OCR 与区域识别</strong><span>符号、等价表达、竖式、填框、作图</span></div><span class="why">底座能力</span></div></div><aside class="decision"><h3>建议形成三个共识</h3><ol><li>建立“题目—评分点—学生证据—教师动作—根因—置信度”场景库。</li><li>以数学过程题做 MVP，先覆盖过程分、结论/过程冲突、证明和多小问。</li><li>引入官方答案与评分细则，通过人工复核建立规则级准确率和收益指标。</li></ol><p class="last">先把教师改分变成产品规则，再讨论教师个人差异。</p></aside></div>
+    </section>
+
+    <div class="method"><strong>口径说明：</strong>事实层的分数变化、数量、覆盖范围与方向来自原始记录；根因层为综合题干、OCR、学生作答和同题组高分答案得出的推测。原始数据不含官方答案与评分细则，因此当前结果用于发现场景和确定优先级，不作为最终准确率结论。</div>
+    <footer class="footer">数据源：数学机批与网阅并存记录 · 仅用于产品价值验证与场景识别，不替代官方评分细则与题目级人工复核。</footer>
+  </main>
+  <dialog class="case-dialog" id="caseDialog" aria-labelledby="caseDialogTitle">
+    <div class="dialog-head">
+      <div><h2 id="caseDialogTitle">典型案例</h2><p id="caseDialogSubtitle">直接展示原始切图；点击图片下方链接可查看原始尺寸。</p></div>
+      <button class="dialog-close" id="caseDialogClose" type="button" aria-label="关闭案例弹窗">×</button>
+    </div>
+    <div class="dialog-body" id="caseDialogBody"></div>
+  </dialog>
+  <script>
+    const filters=[...document.querySelectorAll('.filter')];
+    const cases=[...document.querySelectorAll('.case')];
+    filters.forEach(button=>button.addEventListener('click',()=>{
+      const value=button.dataset.filter;
+      filters.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      cases.forEach(card=>card.classList.toggle('hidden',value!=='all'&&card.dataset.direction!==value&&card.dataset.direction!=='both'));
+    }));
+
+    const caseLibrary={
+      sceneProcessCreditSelected:{dataId:'1500000100349506341',paperId:'015c2f7a-366d-42f1-9d91-8938dcd32e46',topic:'14-1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/23/AfterCorrect_041A25410018AW-iflytek-scan-1790151344-169.jpg?x-oss-process=image/crop,x_101,y_1268,w_741,h_935',machine:0,teacher:3,full:6,confidence:'中',reason:'教师给出3分，说明最终答案不完整或有误，但作答中存在可计分的方法、中间结果或有效步骤；机器0分没有体现过程分。'},
+      processCredit:{dataId:'1500000100348746106',paperId:'49fc5934-b8f8-4c87-b4a4-8503c53a499d',topic:'10--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/24/AfterCorrect_10200811000262_2710dc30102f456ead88c070c22825c4_B.jpg?x-oss-process=image/crop,x_117,y_1632,w_1419,h_572',machine:0,teacher:11,full:16,confidence:'高',reason:'教师仍给11分，说明作答中存在可计分的设元、列式或中间步骤；最终答案或过程不完整，机器0分未体现过程分。'},
+      methodFlaw:{dataId:'1500000100422285445',paperId:'a045844f-0215-4395-98d9-e4c9f15bae5f',topic:'21--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_20032168900342_d008606b585949569d444bb4b8799283_B.jpg?x-oss-process=image/crop,x_117,y_1086,w_1300,h_867',machine:7,teacher:6,full:8,confidence:'中',reason:'机器和教师都认可大部分作答，教师少给1分；最可能是某一步计算、结果对应或书写依据未满足评分细则。'},
+      proofChain:{dataId:'1500000100351871471',paperId:'865b8ebc-1e31-4e10-bc09-7c44cd31c5c7',topic:'2--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/25/AfterCorrect_08073315000011_d6688a09ad3c4e508a81a98961613a18_A.jpg?x-oss-process=image/crop,x_117,y_1312,w_694,h_852',machine:3,teacher:20,full:20,confidence:'高',reason:'教师给满分，表明完整证明实际存在；机器未能把几何条件、全等或距离关系与结论之间的推理链对应起来。'},
+      underestimated:{dataId:'1500000100422597938',paperId:'91ae8699-d6b9-4c50-8412-5d0b75159a7d',topic:'7-3',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_177A25190125AW-iflytek-scan-1790558588--22.jpg?x-oss-process=image/crop,x_101,y_1586,w_726,h_352',machine:1,teacher:10,full:10,confidence:'高',reason:'教师改为满分，说明表格中的答案实际完整或正确；机器很可能没有把各个数值绑定到对应的行列和得分点。'},
+      localResult:{dataId:'1500000100285349273',paperId:'9f06e22c-8ceb-4a14-b29a-2ad959038b5f',topic:'12--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/23/AfterCorrect_19113019700221_055516b5af824f498b3ca5b6bd1066f8_A.jpg?x-oss-process=image/crop,x_844,y_1582,w_694,h_591',machine:8,teacher:1,full:8,confidence:'高',reason:'机器按局部结论给满分，教师核对尺寸与比例过程后仅给1分，属于“结果命中但理由或计算无效”。'},
+      boundary:{dataId:'1500000100421038467',paperId:'0f722031-ce55-4907-89be-e5f860ebacc3',topic:'8--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/27/AfterCorrect_19140852000141_dbb55689ca3a4c2cb27acf0c7a21dff0_A.jpg?x-oss-process=image/crop,x_844,y_398,w_694,h_337',machine:0,teacher:3,full:3,confidence:'低',reason:'教师改为满分；可能是最终选项或涂改痕迹识别问题，也可能是端点是否计入的评分边界，需以切图为准。'},
+      incompleteMulti:{dataId:'1500000100417094703',paperId:'96f32b12-3749-4b07-845a-11ccc29acc62',topic:'3--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/27/AfterCorrect_15102925700082_f38dd2f63ac44ce0aa0aaec383d2cac5_B.jpg?x-oss-process=image/crop,x_117,y_1006,w_1419,h_1190',machine:6,teacher:2,full:15,confidence:'中',reason:'题目包含多个任务，学生作答未覆盖全部小问；机器可能把某个局部结果当作较完整答案。'},
+      incompleteProof:{dataId:'1500000100301285044',paperId:'f4a87b43-b728-4aef-b4d6-991641571dc0',topic:'16-2',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_15101397700371_a9fce477cd3647e7a4f86797bfa105f3_A.jpg?x-oss-process=image/crop,x_101,y_1291,w_1451,h_427',machine:4,teacher:1,full:4,confidence:'高',reason:'机器可能命中判别式结论，但教师认为缺少代入条件、化简或完整推出结论的必要过程。'},
+      layout:{dataId:'1500000100352446890',paperId:'a04390d0-da4d-40d2-9246-ef3cb531a8fe',topic:'1--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/23/AfterCorrect_15014465600021_7d98850857f6479daa228e68511b5104_A.jpg?x-oss-process=image/crop,x_117,y_429,w_1419,h_645',machine:0,teacher:6,full:6,confidence:'低',reason:'教师改为满分，最可能是竖式与填框答案正确，而机器未能将二维版式中的数字绑定到相应得分点。'},
+      longProcess:{dataId:'1500000100384210197',paperId:'8ac557a2-fe63-444b-9721-23a36ba4835a',topic:'18--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_041A25450141AW-iflytek-scan-1790585588--20.jpg?x-oss-process=image/crop,x_117,y_89,w_1419,h_647',machine:0,teacher:14,full:14,confidence:'中',reason:'教师给满分，说明多小问长过程实际有效；机器没有完成分段识别、逐点评分和总分聚合。'},
+      finalAnswerOmissionAccepted:{dataId:'1500000100348746108',paperId:'49fc5934-b8f8-4c87-b4a4-8503c53a499d',topic:'10--1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/24/AfterCorrect_10194037000172_afb5f3f5b2aa4d21aba72115f6679cb5_B.jpg?x-oss-process=image/crop,x_117,y_1632,w_1419,h_572',machine:15,teacher:16,full:16,confidence:'人工核验',reasonLabel:'人工核验结论',reason:'学生过程和计算结果均正确，两个答案已经在计算中出现，只是在“答：”中漏写一个。教师认为不影响数学结论，补回1分。原“单位遗漏”归类不准确，应改为最终答句完整性。'},
+      finalAnswerRequired:{dataId:'1500000100301287075',paperId:'f4a87b43-b728-4aef-b4d6-991641571dc0',topic:'19-2',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_15161048200141_20e3cec994a640a6a328a617e069d12b_A.jpg?x-oss-process=image/crop,x_101,y_1212,w_1451,h_965',machine:5,teacher:4,full:5,confidence:'人工核验',reasonLabel:'人工核验结论',reason:'学生有计算过程，但没有写最终“答：”结论；教师按作答完整性扣1分。原“单位遗漏”归类不准确，应改为最终答句或结论表达要求。'},
+      equivalentRangeAccepted:{dataId:'1500000100301285081',paperId:'f4a87b43-b728-4aef-b4d6-991641571dc0',topic:'17-1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_15092667500221_d5a47e4e988a456bb59e2e98308bf122_A.jpg?x-oss-process=image/crop,x_101,y_1751,w_1451,h_409',machine:3.5,teacher:4,full:4,confidence:'中',reasonLabel:'最可能原因（推测）',reason:'学生由Δ=8m−4>0正确得到m>1/2，数学内容无误。机器少给0.5分，最可能是末行先写变量后划掉干扰了答案定位，或只接受区间形式而未覆盖等价不等式表达；教师按数学内容给满分。'},
+      strictDiscriminant:{dataId:'1500000100301287628',paperId:'f4a87b43-b728-4aef-b4d6-991641571dc0',topic:'17-1',imageUrl:'https://zhixue-gc-bj.oss-cn-beijing.aliyuncs.com/school-book/scanPicture/2026/09/28/AfterCorrect_08052646000161_9771728aefdc4b869c4eb51754d5740e_A.jpg?x-oss-process=image/crop,x_101,y_1751,w_1451,h_409',machine:3.5,teacher:2,full:4,confidence:'人工核验',reasonLabel:'人工核验结论',reason:'本题要求满足两个不相等的实数根，判别式条件必须严格大于0。学生把关键条件写错，属于数学条件错误而非格式差异，教师据此扣至2分。'}
+    };
+
+    const caseGroups={
+      'scene-process-credit':['sceneProcessCreditSelected'],
+      'scene-method-flaw':['methodFlaw'],
+      'scene-proof':['proofChain','longProcess'],
+      'scene-underestimated':['underestimated'],
+      'scene-local-result':['localResult'],
+      'scene-boundary':['strictDiscriminant'],
+      'scene-incomplete':['incompleteMulti','incompleteProof'],
+      'rule-result-process':['localResult'],
+      'rule-subparts':['incompleteMulti'],
+      'rule-proof':['incompleteProof','proofChain'],
+      'rule-layout':['layout','underestimated'],
+      'rule-long-process':['longProcess'],
+      'rule-process-points':['processCredit'],
+      'rule-final-answer-completeness':['finalAnswerOmissionAccepted','finalAnswerRequired'],
+      'rule-range-strictness':['equivalentRangeAccepted','strictDiscriminant']
+    };
+
+    const dialog=document.getElementById('caseDialog');
+    const dialogTitle=document.getElementById('caseDialogTitle');
+    const dialogBody=document.getElementById('caseDialogBody');
+    const dialogClose=document.getElementById('caseDialogClose');
+    const make=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node};
+    const renderCase=(item,index)=>{
+      const article=make('article','modal-case');
+      const meta=make('div','modal-meta');
+      const direction=item.teacher>item.machine?'up':'down';
+      meta.append(make('span','modal-chip','案例 '+(index+1)),make('span','modal-chip '+direction,'机器 '+item.machine+' → 教师 '+item.teacher+' 分'),make('span','modal-chip','满分 '+item.full+' 分'),make('span','modal-chip','置信度：'+item.confidence));
+      const figure=make('figure','case-evidence');
+      const image=make('img','case-evidence-image');
+      image.src=item.imageUrl;
+      image.alt='案例 '+(index+1)+' 原始切图，data_id '+item.dataId;
+      image.loading='lazy';
+      image.decoding='async';
+      const error=make('div','image-error','切图加载失败，请点击下方链接直接打开原始切图。');
+      image.addEventListener('error',()=>figure.classList.add('load-error'));
+      const caption=make('figcaption');
+      const captionText=make('span','',`原始切图 · 题号 ${item.topic}`);
+      const sourceLink=make('a','','打开原始切图');
+      sourceLink.href=item.imageUrl;
+      sourceLink.target='_blank';
+      sourceLink.rel='noopener noreferrer';
+      caption.append(captionText,sourceLink);
+      figure.append(image,error,caption);
+      article.append(meta,figure,make('p','modal-note',(item.reasonLabel||'不一致原因推测')+'：'+item.reason),make('p','modal-ids','data_id '+item.dataId+'\nmarking_paper_id '+item.paperId+'\ntopic '+item.topic));
+      return article;
+    };
+    document.querySelectorAll('[data-case-group]').forEach(button=>button.addEventListener('click',()=>{
+      const keys=caseGroups[button.dataset.caseGroup]||[];
+      dialogTitle.textContent=button.dataset.caseTitle||'典型案例';
+      dialogBody.replaceChildren(...keys.map((key,index)=>renderCase(caseLibrary[key],index)));
+      dialog.showModal();
+    }));
+    dialogClose.addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
+  </script>
+</body>
+</html>
